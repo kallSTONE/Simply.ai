@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* For modern browsers */
+::selection {
+  background-color: #ff4de10e; /* your desired background color */
+  color: rgb(247, 1, 214);              /* text color when selected */
+}
+
+/* For Firefox */
+::-moz-selection {
+  background-color: #ff4de10e; /* your desired background color */
+  color: rgb(255, 0, 221);    
+}
