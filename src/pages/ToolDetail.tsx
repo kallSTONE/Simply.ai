@@ -82,24 +82,24 @@ export function ToolDetail() {
   }
 
   if (loading) {
-    return <div className="text-center text-gray-400 py-12">Loading...</div>;
+    return <div className="text-center text-neutral-400 py-12">Loading...</div>;
   }
 
   if (!tool) {
-    return <div className="text-center text-gray-400 py-12">Tool not found</div>;
+    return <div className="text-center text-neutral-400 py-12">Tool not found</div>;
   }
 
   return (
     <div className="max-w-5xl mx-auto">
       <Link
         to="/"
-        className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6"
+        className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors mb-6"
       >
         <ArrowLeft size={20} />
         Back to Tools
       </Link>
 
-      <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8">
+      <div className="bg-neutral-800 border border-neutral-700 rounded-2xl p-8">
         <div className="flex items-start gap-6 mb-8">
           {tool.logo ? (
             <img 
@@ -108,21 +108,21 @@ export function ToolDetail() {
               className="w-12 h-12 rounded-xl object-cover" 
             />
           ) : (
-            <div className="w-24 h-24 bg-purple-600 rounded-2xl flex items-center justify-center">
+            <div className="w-24 h-24 bg-green-600 rounded-2xl flex items-center justify-center">
               <span className="text-white font-bold text-3xl">{tool.name[0]}</span>
             </div>
           )}
 
           <div className="flex-1">
             <h1 className="text-4xl font-bold text-white mb-2">{tool.name}</h1>
-            <p className="text-xl text-gray-400 mb-4">{tool.developer}</p>
+            <p className="text-xl text-neutral-400 mb-4">{tool.developer}</p>
 
             <div className="flex items-center gap-3">
               <a
                 href={tool.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-medium inline-flex items-center gap-2"
+                className="px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors font-medium inline-flex items-center gap-2"
               >
                 Visit Website
                 <ExternalLink size={18} />
@@ -133,8 +133,8 @@ export function ToolDetail() {
                   onClick={toggleFavorite}
                   className={`px-6 py-3 rounded-xl font-medium transition-colors inline-flex items-center gap-2 ${
                     isFavorite
-                      ? 'bg-red-500 text-white hover:bg-red-600'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      ? 'bg-neutral-500 text-white hover:bg-neutral-600'
+                      : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600'
                   }`}
                 >
                   <Heart size={18} className={isFavorite ? 'fill-current' : ''} />
@@ -146,7 +146,7 @@ export function ToolDetail() {
         </div>
 
         <div className="flex items-center gap-3 mb-6">
-          <span className="px-4 py-2 bg-purple-600/20 text-purple-400 border border-purple-600/30 rounded-xl font-medium">
+          <span className="px-4 py-2 bg-green-600/20 text-green-400 border border-green-600/30 rounded-xl font-medium">
             {tool.pricing_tag}
           </span>
           {tool.rating > 0 && (
@@ -158,7 +158,7 @@ export function ToolDetail() {
 
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-white mb-4">About</h2>
-          <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">{tool.full_description}</p>
+          <p className="text-neutral-300 leading-relaxed whitespace-pre-wrap">{tool.full_description}</p>
         </div>
 
         {tool.platforms.length > 0 && (
@@ -168,7 +168,7 @@ export function ToolDetail() {
               {tool.platforms.map((platform) => (
                 <span
                   key={platform}
-                  className="px-4 py-2 bg-gray-700 text-gray-300 rounded-xl"
+                  className="px-4 py-2 bg-neutral-700 text-neutral-300 rounded-xl"
                 >
                   {platform}
                 </span>
@@ -184,7 +184,7 @@ export function ToolDetail() {
               {tool.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-4 py-2 bg-gray-700 text-gray-300 rounded-xl"
+                  className="px-4 py-2 bg-neutral-700 text-neutral-300 rounded-xl"
                 >
                   {tag}
                 </span>
@@ -218,7 +218,7 @@ export function ToolDetail() {
               <Link
                 key={relatedTool.id}
                 to={`/tool/${relatedTool.slug}`}
-                className="bg-gray-800 border border-gray-700 rounded-2xl p-6 hover:border-purple-600 transition-colors"
+                className="bg-neutral-800 border border-neutral-700 rounded-2xl p-6 hover:border-green-600 transition-colors"
               >
                 <div className="flex items-center gap-3 mb-3">
                   {relatedTool.logo ? (
@@ -228,13 +228,13 @@ export function ToolDetail() {
                       className="w-12 h-12 rounded-xl object-cover"
                     />
                   ) : (
-                    <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
                       <span className="text-white font-bold">{relatedTool.name[0]}</span>
                     </div>
                   )}
                   <h3 className="text-lg font-bold text-white">{relatedTool.name}</h3>
                 </div>
-                <p className="text-gray-300 text-sm line-clamp-2">{relatedTool.short_description}</p>
+                <p className="text-neutral-300 text-sm line-clamp-2">{relatedTool.short_description}</p>
               </Link>
             ))}
           </div>

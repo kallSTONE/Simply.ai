@@ -22,7 +22,7 @@ export function Toolkits() {
   }
 
   if (loading) {
-    return <div className="text-center text-gray-400 py-12">Loading...</div>;
+    return <div className="text-center text-neutral-400 py-12">Loading...</div>;
   }
 
   return (
@@ -31,8 +31,8 @@ export function Toolkits() {
 
       {toolkits.length === 0 ? (
         <div className="text-center py-12">
-          <Package className="mx-auto text-gray-600 mb-4" size={64} />
-          <p className="text-xl text-gray-400">No toolkits available yet</p>
+          <Package className="mx-auto text-neutral-600 mb-4" size={64} />
+          <p className="text-xl text-neutral-400">No toolkits available yet</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -40,10 +40,10 @@ export function Toolkits() {
             <Link
               key={toolkit.id}
               to={`/toolkit/${toolkit.slug}`}
-              className="block bg-gray-800 border border-gray-700 rounded-2xl p-6 hover:border-purple-600 transition-colors"
+              className="block bg-neutral-800 border border-neutral-700 rounded-2xl p-6 hover:border-green-600 transition-colors"
             >
-              <h2 className="text-2xl font-bold text-white mb-2">{toolkit.name}</h2>
-              <p className="text-gray-300">{toolkit.description}</p>
+              <h2 className="text-2xl font-bold text-white mb-2 group-hover:border-green-600 transition-colors">{toolkit.name}</h2>
+              <p className="text-neutral-300">{toolkit.description}</p>
             </Link>
           ))}
         </div>

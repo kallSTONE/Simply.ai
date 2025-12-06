@@ -35,7 +35,7 @@ export function FilterOverlay() {
     if (tools) {
       const platformSet = new Set<string>();
       tools.forEach(tool => {
-        tool.platforms.forEach(p => platformSet.add(p));
+        tool.platforms.forEach((p: string) => platformSet.add(p));
       });
       setAvailablePlatforms(Array.from(platformSet));
     }
@@ -73,13 +73,13 @@ export function FilterOverlay() {
         className="fixed inset-0 bg-black/50 z-40"
         onClick={toggleFilter}
       />
-      <div className="fixed right-0 top-0 h-screen w-96 bg-gray-900 border-l border-gray-800 z-50 overflow-y-auto">
+      <div className="fixed right-0 top-0 h-screen w-96 bg-neutral-900 border-l border-neutral-800 z-50 overflow-y-auto">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-white">Filters</h2>
             <button
               onClick={toggleFilter}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-neutral-400 hover:text-white transition-colors"
             >
               <X size={24} />
             </button>
@@ -95,9 +95,9 @@ export function FilterOverlay() {
                       type="checkbox"
                       checked={categories.includes(cat)}
                       onChange={() => toggleCategory(cat)}
-                      className="w-4 h-4 rounded border-gray-700 bg-gray-800 text-purple-600 focus:ring-purple-600"
+                      className="w-4 h-4 rounded border-neutral-700 bg-neutral-800 text-purple-600 focus:ring-purple-600"
                     />
-                    <span className="text-gray-300">{cat}</span>
+                    <span className="text-neutral-300">{cat}</span>
                   </label>
                 ))}
               </div>
@@ -112,9 +112,9 @@ export function FilterOverlay() {
                       type="checkbox"
                       checked={pricing.includes(price)}
                       onChange={() => togglePricing(price)}
-                      className="w-4 h-4 rounded border-gray-700 bg-gray-800 text-purple-600 focus:ring-purple-600"
+                      className="w-4 h-4 rounded border-neutral-700 bg-neutral-800 text-purple-600 focus:ring-purple-600"
                     />
-                    <span className="text-gray-300">{price}</span>
+                    <span className="text-neutral-300">{price}</span>
                   </label>
                 ))}
               </div>
@@ -129,9 +129,9 @@ export function FilterOverlay() {
                       type="checkbox"
                       checked={platforms.includes(platform)}
                       onChange={() => togglePlatform(platform)}
-                      className="w-4 h-4 rounded border-gray-700 bg-gray-800 text-purple-600 focus:ring-purple-600"
+                      className="w-4 h-4 rounded border-neutral-700 bg-neutral-800 text-purple-600 focus:ring-purple-600"
                     />
-                    <span className="text-gray-300">{platform}</span>
+                    <span className="text-neutral-300">{platform}</span>
                   </label>
                 ))}
               </div>
@@ -166,7 +166,7 @@ export function FilterOverlay() {
                 clearFilters();
                 toggleFilter();
               }}
-              className="w-full py-3 bg-gray-800 text-gray-300 rounded-xl hover:bg-gray-700 transition-colors font-medium"
+              className="w-full py-3 bg-neutral-800 text-neutral-300 rounded-xl hover:bg-neutral-700 transition-colors font-medium"
             >
               Clear All
             </button>

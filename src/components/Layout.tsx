@@ -5,7 +5,7 @@ import { FilterOverlay } from './FilterOverlay';
 
 export function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800">
+    <div className="flex min-h-screen bg-gradient-to-br from-black via-neutral-900 to-neutral-700">
       <Sidebar />
       <div className="flex-1 flex flex-col ml-64">
         <Header />

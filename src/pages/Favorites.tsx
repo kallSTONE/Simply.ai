@@ -43,7 +43,7 @@ export function Favorites() {
   }
 
   if (loading) {
-    return <div className="text-center text-gray-400 py-12">Loading...</div>;
+    return <div className="text-center text-neutral-400 py-12">Loading...</div>;
   }
 
   return (
@@ -55,9 +55,9 @@ export function Favorites() {
 
       {tools.length === 0 ? (
         <div className="text-center py-12">
-          <Heart className="mx-auto text-gray-600 mb-4" size={64} />
-          <p className="text-xl text-gray-400">No favorites yet</p>
-          <p className="text-gray-500 mt-2">Start exploring and save your favorite AI tools</p>
+          <Heart className="mx-auto text-neutral-600 mb-4" size={64} />
+          <p className="text-xl text-neutral-400">No favorites yet</p>
+          <p className="text-neutral-500 mt-2">Start exploring and save your favorite AI tools</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

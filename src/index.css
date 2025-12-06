@@ -4,12 +4,12 @@
 
 /* For modern browsers */
 ::selection {
-  background-color: #ff4de10e; /* your desired background color */
-  color: rgb(247, 1, 214);              /* text color when selected */
+  background-color: #4dff4d0e; 
+  color: #22c55e;          /* text color when selected */
 }
 
 /* For Firefox */
 ::-moz-selection {
-  background-color: #ff4de10e; /* your desired background color */
-  color: rgb(255, 0, 221);    
+  background-color: #4dff4d0e; 
+  color: #22c55e;   
 }

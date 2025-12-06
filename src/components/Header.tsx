@@ -9,21 +9,21 @@ export function Header() {
 
   return (
     <>
-      <header className="h-16 border-b border-gray-800 bg-gradient-to-br from-black via-gray-900/60 to-gray-800/90 text-gray-300 flex items-center justify-end px-8 gap-4">
+      <header className="h-16 border-b border-neutral-800 bg-gradient-to-br from-black via-neutral-900/60 to-neutral-800/90 text-neutral-300 flex items-center justify-end px-8 gap-4">
         {user ? (
           <>
-            <div className="flex items-center gap-2 text-gray-300">
+            <div className="flex items-center gap-2 text-neutral-300">
               <User size={18} />
               <span className="text-sm">{user.email}</span>
               {isAdmin && (
-                <span className="ml-2 text-xs bg-purple-600 text-white px-2 py-1 rounded">
+                <span className="ml-2 text-xs bg-green-400 text-white px-2 py-1 rounded">
                   ADMIN
                 </span>
               )}
             </div>
             <button
               onClick={signOut}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-sm text-neutral-300 hover:text-white transition-colors"
             >
               <LogOut size={18} />
               Sign Out
@@ -32,7 +32,7 @@ export function Header() {
         ) : (
           <button
             onClick={() => setShowAuthModal(true)}
-            className="px-6 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-medium"
+            className="px-6 py-2 bg-green-600 text-white rounded-xl hover:bg-green-500/60 transition-colors font-medium"
           >
             Sign In
           </button>
