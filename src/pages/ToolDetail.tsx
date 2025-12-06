@@ -57,7 +57,7 @@ export function ToolDetail() {
 
     if (data) {
       const filtered = data.filter(t =>
-        t.tags.some(tag => tags.includes(tag))
+        t.tags.some((tag : string) => tags.includes(tag))
       );
       setRelatedTools(filtered.length > 0 ? filtered : data);
     }
@@ -102,7 +102,11 @@ export function ToolDetail() {
       <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8">
         <div className="flex items-start gap-6 mb-8">
           {tool.logo ? (
-            <img src={tool.logo} alt={tool.name} className="w-24 h-24 rounded-2xl object-cover" />
+            <img 
+              src={tool.logo_display || tool.logo || `https://ui-avatars.com/api/?name=${encodeURIComponent(tool.name)}&background=9333ea&color=fff&size=256&bold=true`}
+              alt={tool.name} 
+              className="w-12 h-12 rounded-xl object-cover" 
+            />
           ) : (
             <div className="w-24 h-24 bg-purple-600 rounded-2xl flex items-center justify-center">
               <span className="text-white font-bold text-3xl">{tool.name[0]}</span>

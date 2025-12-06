@@ -26,6 +26,7 @@ export type Tool = {
   created_by: string | null;
   created_at: string;
   updated_at: string;
+  logo_display: string | null;
 };
 
 export type Category = {
