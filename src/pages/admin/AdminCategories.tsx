@@ -40,12 +40,12 @@ export function AdminCategories() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Category name"
-          className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+          className="flex-1 px-4 py-3 bg-neutral-800 border border-neutral-700 rounded-xl text-white focus:outline-none focus:border-green-600"
           required
         />
         <button
           type="submit"
-          className="px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors flex items-center gap-2 font-medium"
+          className="px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center gap-2 font-medium"
         >
           <Plus size={20} />
           Add
@@ -54,7 +54,7 @@ export function AdminCategories() {
 
       <div className="space-y-3">
         {categories.map((cat) => (
-          <div key={cat.id} className="bg-gray-800 border border-gray-700 rounded-xl p-4 flex items-center justify-between">
+          <div key={cat.id} className="bg-neutral-800 border border-neutral-700 rounded-xl p-4 flex items-center justify-between">
             <span className="text-white font-medium">{cat.name}</span>
             <button
               onClick={() => deleteCategory(cat.id)}

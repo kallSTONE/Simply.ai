@@ -40,7 +40,7 @@ export function Toolkits() {
             <Link
               key={toolkit.id}
               to={`/toolkit/${toolkit.slug}`}
-              className="block bg-neutral-800 border border-neutral-700 rounded-2xl p-6 hover:border-green-600 transition-colors"
+              className="block bg-gray-800/60 border border-neutral-700 rounded-2xl p-6 hover:border-green-600 transition-colors"
             >
               <h2 className="text-2xl font-bold text-white mb-2 group-hover:border-green-600 transition-colors">{toolkit.name}</h2>
               <p className="text-neutral-300">{toolkit.description}</p>

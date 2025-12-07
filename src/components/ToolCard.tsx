@@ -72,7 +72,7 @@ export function ToolCard({ tool }: ToolCardProps) {
   return (
     <Link
       to={`/tool/${tool.slug}`}
-      className="block max-h-max bg-neutral-800 border border-neutral-700 rounded-2xl p-4 hover:border-green-600 transition-all group"
+      className="block max-h-max bg-gray-800/50 border border-neutral-700 rounded-2xl p-4 hover:border-green-600 transition-all group"
     >
      <div className="flex flex-wrap items-start justify-between mb-4">
       <div className="flex-1 min-w-0 flex items-center gap-3">
