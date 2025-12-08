@@ -121,12 +121,12 @@ export function ToolForm({ tool, onClose }: ToolFormProps) {
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 overflow-y-auto" onClick={onClose}>
       <div
-        className="bg-gray-900 rounded-2xl p-8 w-full max-w-3xl my-8 relative"
+        className="bg-neutral-900/85 rounded-2xl p-8 w-full max-w-3xl my-8 relative"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+          className="absolute top-4 right-4 text-neutral-400/85 hover:text-white transition-colors"
         >
           <X size={24} />
         </button>
@@ -138,45 +138,45 @@ export function ToolForm({ tool, onClose }: ToolFormProps) {
         <form onSubmit={handleSubmit} className="space-y-4 max-h-[70vh] overflow-y-auto pr-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Name</label>
+              <label className="block text-sm font-medium text-neutral-300/85 mb-2">Name</label>
               <input
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleNameChange(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+                className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Slug</label>
+              <label className="block text-sm font-medium text-neutral-300/85 mb-2">Slug</label>
               <input
                 type="text"
                 value={formData.slug}
                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+                className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Short Description</label>
+            <label className="block text-sm font-medium text-neutral-300/85 mb-2">Short Description</label>
             <input
               type="text"
               value={formData.short_description}
               onChange={(e) => setFormData({ ...formData, short_description: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+              className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Full Description</label>
+            <label className="block text-sm font-medium text-neutral-300/85 mb-2">Full Description</label>
             <textarea
               value={formData.full_description}
               onChange={(e) => setFormData({ ...formData, full_description: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+              className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
               rows={4}
               required
             />
@@ -184,23 +184,23 @@ export function ToolForm({ tool, onClose }: ToolFormProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Website</label>
+              <label className="block text-sm font-medium text-neutral-300/85 mb-2">Website</label>
               <input
                 type="url"
                 value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+                className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Developer</label>
+              <label className="block text-sm font-medium text-neutral-300/85 mb-2">Developer</label>
               <input
                 type="text"
                 value={formData.developer}
                 onChange={(e) => setFormData({ ...formData, developer: e.target.value })}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+                className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
                 required
               />
             </div>
@@ -208,11 +208,11 @@ export function ToolForm({ tool, onClose }: ToolFormProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Pricing</label>
+              <label className="block text-sm font-medium text-neutral-300/85 mb-2">Pricing</label>
               <select
                 value={formData.pricing_tag}
                 onChange={(e) => setFormData({ ...formData, pricing_tag: e.target.value })}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+                className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
               >
                 <option value="Free">Free</option>
                 <option value="Freemium">Freemium</option>
@@ -221,7 +221,7 @@ export function ToolForm({ tool, onClose }: ToolFormProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Rating</label>
+              <label className="block text-sm font-medium text-neutral-300/85 mb-2">Rating</label>
               <input
                 type="number"
                 min="0"
@@ -229,13 +229,13 @@ export function ToolForm({ tool, onClose }: ToolFormProps) {
                 step="0.1"
                 value={formData.rating}
                 onChange={(e) => setFormData({ ...formData, rating: parseFloat(e.target.value) })}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+                className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Categories</label>
+            <label className="block text-sm font-medium text-neutral-300/85 mb-2">Categories</label>
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => (
                 <label key={cat.id} className="flex items-center gap-2 cursor-pointer">
@@ -249,52 +249,52 @@ export function ToolForm({ tool, onClose }: ToolFormProps) {
                         setSelectedCategories(selectedCategories.filter(id => id !== cat.id));
                       }
                     }}
-                    className="w-4 h-4 rounded border-gray-700 bg-gray-800 text-purple-600"
+                    className="w-4 h-4 rounded border-neutral-700/85 bg-neutral-800/85 text-green-600/90"
                   />
-                  <span className="text-gray-300">{cat.name}</span>
+                  <span className="text-neutral-300/85">{cat.name}</span>
                 </label>
               ))}
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Platforms (comma-separated)</label>
+            <label className="block text-sm font-medium text-neutral-300/85 mb-2">Platforms (comma-separated)</label>
             <input
               type="text"
               value={formData.platforms}
               onChange={(e) => setFormData({ ...formData, platforms: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+              className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
               placeholder="Web, iOS, Android"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Tags (comma-separated)</label>
+            <label className="block text-sm font-medium text-neutral-300/85 mb-2">Tags (comma-separated)</label>
             <input
               type="text"
               value={formData.tags}
               onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+              className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
               placeholder="AI, NLP, Image Generation"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Logo URL</label>
+            <label className="block text-sm font-medium text-neutral-300/85 mb-2">Logo URL</label>
             <input
               type="url"
               value={formData.logo}
               onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+              className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Screenshots (one per line)</label>
+            <label className="block text-sm font-medium text-neutral-300/85 mb-2">Screenshots (one per line)</label>
             <textarea
               value={formData.screenshots}
               onChange={(e) => setFormData({ ...formData, screenshots: e.target.value })}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-600"
+              className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600/90"
               rows={3}
               placeholder="https://example.com/screenshot1.jpg"
             />
@@ -303,7 +303,7 @@ export function ToolForm({ tool, onClose }: ToolFormProps) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 bg-green-600/90 text-white rounded-xl hover:bg-green-700/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Saving...' : tool ? 'Update Tool' : 'Create Tool'}
           </button>
