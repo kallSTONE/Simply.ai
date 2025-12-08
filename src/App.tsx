@@ -7,6 +7,7 @@ import { ToolDetail } from './pages/ToolDetail';
 import { ArticleDetail } from './pages/ArticleDetial';
 import { Favorites } from './pages/Favorites';
 import { Articles } from './pages/Articles';
+import { AdminSubmissions } from './pages/admin/AdminSubmissions.tsx';
 
 import { Toolkits } from './pages/Toolkits';
 import { ToolkitDetail } from './pages/ToolkitDetail';
@@ -34,6 +35,8 @@ function App() {
             <Route path="/admin" element={<AdminTools />} />
             <Route path="/admin/categories" element={<AdminCategories />} />
             <Route path="/admin/articles" element={<AdminArticles />} />
+            <Route path="/admin/categories" element={<AdminCategories />} />
+            <Route path="/admin/submissions" element={<AdminSubmissions />} />
             <Route path="/article/:slug" element={<ArticleDetail />} />
           </Routes>
         </Layout>

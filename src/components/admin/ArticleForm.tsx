@@ -20,7 +20,6 @@ export function ArticleForm({ article, onClose }: ArticleFormProps) {
     summary: article?.summary || '',
     body: article?.body || '',
     author_id: article?.author_id || '',
-    updated_at: article?.updated_at || 'null',
     tags: article?.tags.join(', ') || '',
   });
 
@@ -66,48 +65,136 @@ export function ArticleForm({ article, onClose }: ArticleFormProps) {
     });
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
+  // async function handleSubmit(e: React.FormEvent) {
+  //   e.preventDefault();
+  //   setLoading(true);
 
-    const articleData = {
-      ...formData,
-      tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
-      author_id: user?.id,
-    };
+  //   const articleData = {
+  //     ...formData,
+  //     tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
+  //     author_id: user?.id ?? null,
+  //   };
 
-    if (article) {
-      await supabase.from('articles').update(articleData).eq('id', article.id);
-      await supabase.from('article_categories').delete().eq('article_id', article.id);
+  //   if (article) {
+  //     await supabase.from('articles').update(articleData).eq('id', article.id);
+  //     await supabase.from('article_categories').delete().eq('article_id', article.id);
 
-      if (selectedCategories.length > 0) {
-        await supabase.from('article_categories').insert(
-          selectedCategories.map(catId => ({
-            article_id: article.id,
-            category_id: catId,
-          }))
-        );
-      }
-    } else {
-      const { data: newArticle } = await supabase
-        .from('articles')
-        .insert(articleData)
-        .select()
-        .single();
+  //     if (selectedCategories.length > 0) {
+  //       await supabase.from('article_categories').insert(
+  //         selectedCategories.map(catId => ({
+  //           article_id: article.id,
+  //           category_id: catId,
+  //         }))
+  //       );
+  //     }
+  //     console.log("Creating article with data:", articleData);
+  //     console.log("Selected categories:", selectedCategories);
+  //   } else {
+  //     const { data: newArticle } = await supabase
+  //       .from('articles')
+  //       .insert(articleData)
+  //       .select()
+  //       .single();
 
-      if (newArticle && selectedCategories.length > 0) {
-        await supabase.from('article_categories').insert(
-          selectedCategories.map(catId => ({
-            article_id: newArticle.id,
-            category_id: catId,
-          }))
-        );
-      }
-    }
+  //     if (newArticle && selectedCategories.length > 0) {
+  //       await supabase.from('article_categories').insert(
+  //         selectedCategories.map(catId => ({
+  //           article_id: newArticle.id,
+  //           category_id: catId,
+  //         }))
+  //       );
+  //     }
+  //   }
 
+  //   setLoading(false);
+  //   onClose();
+  // }
+
+
+
+async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+  setLoading(true);
+
+  // You MUST have a logged-in user
+  if (!user) {
+    alert("You must be logged in to create or edit an article.");
     setLoading(false);
-    onClose();
+    return;
   }
+
+  // Build article payload
+  const articleData = {
+    ...formData,
+    tags: formData.tags
+      .split(',')
+      .map(t => t.trim())
+      .filter(Boolean),
+    author_id: user.id, // Always the current user
+  };
+
+  let newArticleId = article?.id;
+  let error = null;
+
+  if (article) {
+    // ----- UPDATE EXISTING ARTICLE -----
+    const { error: updateError } = await supabase
+      .from('articles')
+      .update(articleData)
+      .eq('id', article.id);
+
+    error = updateError;
+  } else {
+    // ----- CREATE NEW ARTICLE -----
+    const { data: newArticle, error: insertError } = await supabase
+      .from('articles')
+      .insert(articleData)
+      .select()
+      .single();
+
+    error = insertError;
+    newArticleId = newArticle?.id; // For inserting categories
+  }
+
+  // If insert/update failed → stop
+  if (error) {
+    console.error("Article save error:", error);
+    alert(error.message);
+    setLoading(false);
+    return;
+  }
+
+  // ----- CATEGORY RELATIONS -----
+  // Remove old categories if editing
+  if (article) {
+    await supabase
+      .from('article_categories')
+      .delete()
+      .eq('article_id', article.id);
+  }
+
+  // Add new categories
+  if (selectedCategories.length > 0 && newArticleId) {
+    const { error: categoryError } = await supabase.from('article_categories').insert(
+      selectedCategories.map(catId => ({
+        article_id: newArticleId,
+        category_id: catId,
+      }))
+    );
+
+    if (categoryError) {
+      console.error("Category insert error:", categoryError);
+      alert(categoryError.message);
+      setLoading(false);
+      return;
+    }
+  }
+
+  setLoading(false);
+  onClose();
+}
+
+
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 overflow-y-auto" onClick={onClose}>
@@ -174,7 +261,7 @@ export function ArticleForm({ article, onClose }: ArticleFormProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-
+{/* 
             <div>
               <label className="block text-sm font-medium text-neutral-300/85 mb-2">Author ID</label>
               <input
@@ -184,7 +271,7 @@ export function ArticleForm({ article, onClose }: ArticleFormProps) {
                 className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white focus:outline-none focus:border-green-600"
                 required
               />
-            </div>
+            </div> */}
           </div>
           <div>
             <label className="block text-sm font-medium text-neutral-300/85 mb-2">Categories</label>

@@ -3,6 +3,7 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 import { supabase, Article } from '../../lib/supabase';
 import { AdminLayout } from './AdminLayout';
 import { ArticleForm } from '../../components/admin/ArticleForm.tsx';
+import Lg from '../../public/images/logo.png'
 
 export function AdminArticles() {
   const [showForm, setShowForm] = useState(false);
@@ -70,7 +71,7 @@ export function AdminArticles() {
           >
             <div className="flex items-center gap-4">
               {article.id ? (
-                <img src={article.slug} alt={article.title} className="w-16 h-16 rounded-xl object-cover" />
+                <img src={Lg} alt={article.title} className="w-16 h-16 rounded-xl object-cover" />
               ) : (
                 <div className="w-16 h-16 bg-green-600 rounded-xl flex items-center justify-center">
                   <span className="text-white font-bold text-xl">{article.title[0]}</span>

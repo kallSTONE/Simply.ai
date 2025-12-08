@@ -20,7 +20,8 @@ export function AdminLayout({ children }: { children: ReactNode }) {
 
   const tabs = [
     { to: '/admin', icon: Wrench, label: 'Tools' },
-    { to: '/admin/articles', icon: FileText, label: 'Articles' },
+    { to: '/admin/articles', icon: FileText, label: 'Articles' },    
+    { to: '/admin/submissions', icon: Users, label: 'Submissions' },
     { to: '/admin/toolkits', icon: Package, label: 'Toolkits' },
     { to: '/admin/toolkittools', icon: Inbox, label: 'Toolkit Tools' },
     { to: '/admin/categories', icon: FolderTree, label: 'Categories' },
