@@ -59,15 +59,15 @@ export function Sidebar() {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors  border border-red-900 items-center ${
                     isActive
                       ? 'bg-red-600 text-white'
                       : 'text-red-400 hover:bg-neutral-800 hover:text-red-300'
                   }`}
                 >
                   <Icon size={20} />
-                  <span className="font-medium">{link.label}</span>
-                  <span className="ml-auto text-xs bg-red-500 text-white px-2 py-1 rounded">
+                  <span className="font-medium hidden lg:block">{link.label}</span>
+                  <span className="ml-auto text-xs bg-red-500 text-white px-2 py-1 rounded hidden lg:block">
                     ADMIN
                   </span>
                 </Link>
