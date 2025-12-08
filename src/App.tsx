@@ -30,7 +30,7 @@ function App() {
             <Route path="/toolkits" element={<Toolkits />} />
             <Route path="/toolkit/:slug" element={<ToolkitDetail />} />
             <Route path="/admin/toolkits" element={<AdminToolkits />} />
-            <Route path="/admin/Submissions" element={<AdminToolkitTools />} />
+            <Route path="/admin/toolkittools" element={<AdminToolkitTools />} />
             <Route path="/admin" element={<AdminTools />} />
             <Route path="/admin/categories" element={<AdminCategories />} />
             <Route path="/admin/articles" element={<AdminArticles />} />

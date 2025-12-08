@@ -22,9 +22,9 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     { to: '/admin', icon: Wrench, label: 'Tools' },
     { to: '/admin/articles', icon: FileText, label: 'Articles' },
     { to: '/admin/toolkits', icon: Package, label: 'Toolkits' },
+    { to: '/admin/toolkittools', icon: Inbox, label: 'Toolkit Tools' },
     { to: '/admin/categories', icon: FolderTree, label: 'Categories' },
     { to: '/admin/users', icon: Users, label: 'Users' },
-    { to: '/admin/submissions', icon: Inbox, label: 'Submissions' },
   ];
 
   return (
