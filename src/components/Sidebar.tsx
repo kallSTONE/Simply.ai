@@ -1,6 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Heart, FileText, Package, Settings } from 'lucide-react';
 import { useAuth } from '../lib/auth-context';
+import Lg from '../public/images/logo.png'
+
 
 export function Sidebar() {
   const location = useLocation();
@@ -18,13 +20,13 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-neutral-900 border-r border-neutral-800 flex flex-col">
+    <aside className="fixed left-0 top-0 h-screen w-24 md:w-48 bg-neutral-900 border-r border-neutral-800 flex flex-col">
       <div className="p-6">
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-gradient-to-r from-black-600 via-green-500 to-[rgba(7, 95, 19, 0.6)] text-white shadow-lg rounded-xl flex items-center justify-center">
-            <span className="text-white font-bold text-xl">S</span>
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center">
+            <img src={Lg} alt="simplyailogo" />
           </div>
-          <span className="text-white font-bold text-xl">Simply.AI</span>
+          <span className="text-white font-bold text-xl hidden md:block">SimplyAI</span>
         </Link>
       </div>
 
@@ -43,7 +45,7 @@ export function Sidebar() {
               }`}
             >
               <Icon size={20} />
-              <span className="font-medium">{link.label}</span>
+              <span className="font-medium hidden md:block">{link.label}</span>
             </Link>
           );
         })}

@@ -72,8 +72,8 @@ export function Home() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="mb-12">
+    <div className="max-w-auto mx-auto ">
+      <div className="mb-12 ">
         <h1 className="text-2xl font-bold text-white mb-4">
           With AI I want to...
         </h1>
