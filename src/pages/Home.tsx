@@ -3,71 +3,109 @@ import { Search, Filter, TrendingUp, Sparkles } from 'lucide-react';
 import { useFilterStore } from '../lib/store';
 import { supabase, Tool } from '../lib/supabase';
 import { ToolCard } from '../components/ToolCard';
+
 export function Home() {
   const { searchQuery, setSearchQuery, toggleFilter, categories, pricing, platforms, rating } = useFilterStore();
+
+  const LIMIT = 50;
+
   const [tools, setTools] = useState<Tool[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [sortBy, setSortBy] = useState<'new' | 'trending'>('new');
 
+  // Reload tools when filters/sorting/search change
   useEffect(() => {
-    loadTools();
+    setPage(1);
+    fetchTools(true);
   }, [searchQuery, categories, pricing, platforms, rating, sortBy]);
 
-  async function loadTools() {
+  // Load tools from server
+  async function fetchTools(reset = false) {
     setLoading(true);
+
+    const from = 0;
+    const to = page * LIMIT - 1;
+
+    // Base query with count
     let query = supabase
       .from('tools')
-      .select('*');
+      .select('*', { count: 'exact' });
 
+    // SEARCH
     if (searchQuery) {
-      query = query.or(`name.ilike.%${searchQuery}%,short_description.ilike.%${searchQuery}%,tags.cs.{${searchQuery}}`);
+      query = query.or(
+        `name.ilike.%${searchQuery}%,short_description.ilike.%${searchQuery}%,tags.cs.{${searchQuery}}`
+      );
     }
 
+    // PRICING FILTER
     if (pricing.length > 0) {
       query = query.in('pricing_tag', pricing);
     }
 
+    // RATING FILTER
     if (rating > 0) {
       query = query.gte('rating', rating);
     }
 
+    // CATEGORY FILTER
     if (categories.length > 0) {
       const { data: toolIds } = await supabase
         .from('tool_categories')
         .select('tool_id, categories!inner(name)')
         .in('categories.name', categories);
 
-      if (toolIds && toolIds.length > 0) {
-        const ids = toolIds.map(t => t.tool_id);
-        query = query.in('id', ids);
-      } else {
+      if (!toolIds || toolIds.length === 0) {
         setTools([]);
+        setHasMore(false);
         setLoading(false);
         return;
       }
+
+      query = query.in('id', toolIds.map((t) => t.tool_id));
     }
 
+    // SORT
     if (sortBy === 'new') {
       query = query.order('created_at', { ascending: false });
     } else {
       query = query.order('rating', { ascending: false });
     }
 
-    const { data } = await query;
+    // SERVER PAGINATION
+    query = query.range(from, to);
 
-    if (data) {
-      let filteredData = data;
+    const { data, count } = await query;
 
-      if (platforms.length > 0) {
-        filteredData = filteredData.filter(tool =>
-          platforms.some(platform => tool.platforms.includes(platform))
-        );
-      }
+    // APPLY PLATFORM FILTER LOCALLY (DB can’t filter arrays easily)
+    let filtered = data ?? [];
+    if (platforms.length > 0) {
+      filtered = filtered.filter(tool =>
+        platforms.some(p => tool.platforms.includes(p))
+      );
+    }
 
-      setTools(filteredData);
+    if (reset) {
+      setTools(filtered);
+    } else {
+      setTools(prev => [...prev, ...filtered]);
+    }
+
+    // Check if more results exist
+    if (!data || data.length < LIMIT || (count && tools.length >= count)) {
+      setHasMore(false);
+    } else {
+      setHasMore(true);
     }
 
     setLoading(false);
+  }
+
+  function loadMore() {
+    setPage(prev => prev + 1);
+    fetchTools();
   }
 
   return (
@@ -104,22 +142,20 @@ export function Home() {
           <div className="flex gap-3">
             <button
               onClick={() => setSortBy('new')}
-              className={`px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 ${
-                sortBy === 'new'
+              className={`px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 ${sortBy === 'new'
                   ? 'bg-green-900/90 text-white'
                   : 'bg-neutral-800/50 text-neutral-400 hover:bg-neutral-700'
-              }`}
+                }`}
             >
               <Sparkles size={18} />
               New Tools
             </button>
             <button
               onClick={() => setSortBy('trending')}
-              className={`px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 ${
-                sortBy === 'trending'
+              className={`px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 ${sortBy === 'trending'
                   ? 'bg-green-600 text-white'
                   : 'bg-neutral-800/50 text-neutral-400 hover:bg-neutral-700'
-              }`}
+                }`}
             >
               <TrendingUp size={18} />
               Trending
@@ -127,74 +163,77 @@ export function Home() {
           </div>
         </div>
 
-        {loading ? (
+        {loading && tools.length === 0 ? (
           <div className="text-center text-neutral-400 py-12">Loading...</div>
         ) : tools.length === 0 ? (
           <div className="text-center text-neutral-400 py-12">
             No tools found. Try adjusting your filters.
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-4 gap-y-6">
-            {tools.map(tool => (
-              <ToolCard key={tool.id} tool={tool} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-4 gap-y-6">
+              {tools.map((tool) => (
+                <ToolCard key={tool.id} tool={tool} />
+              ))}
+            </div>
+
+            {hasMore && !loading && (
+              <div className="flex justify-center mt-10">
+                <button
+                  onClick={loadMore}
+                  className="
+                    px-12 py-3 
+                    bg-gray-800/60 
+                    border border-neutral-700 
+                    text-white 
+                    rounded-xl 
+                    hover:bg-gray-900/60 
+                    hover:border-green-600
+                    transition-all 
+                    duration-300 
+                    shadow-lg 
+                    shadow-black/20
+                    backdrop-blur-sm
+                    flex items-center gap-2
+                  "
+                >
+                  <span>View More</span>
+                  <svg
+                    className="w-4 h-4 animate-pulse text-green-400"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+            )}
+
+            {loading && tools.length > 0 && (
+              <div className="flex justify-center py-8 text-neutral-400">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-bounce"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-bounce delay-150"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-bounce delay-300"></div>
+                  <span className="ml-2">Loading more...</span>
+                </div>
+              </div>
+            )}
+
+          </>
         )}
 
-  <div className="fixed bottom-0 w-full pointer-events-none">
-
-    <div className="w-full h-[1.2px] backdrop-blur-[0px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[0.51px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[1.03px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[1.54px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[2.05px] bg-transparent"></div>
-
-    <div className="w-full h-[1.2px] backdrop-blur-[2.56px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[3.08px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[3.59px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[4.10px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[4.62px] bg-transparent"></div>
-
-    <div className="w-full h-[1.2px] backdrop-blur-[5.13px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[5.64px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[6.15px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[6.67px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[7.18px] bg-transparent"></div>
-
-    <div className="w-full h-[1.2px] backdrop-blur-[7.69px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[8.21px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[8.72px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[9.23px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[9.74px] bg-transparent"></div>
-
-    <div className="w-full h-[1.2px] backdrop-blur-[10.26px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[10.77px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[11.28px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[11.79px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[12.31px] bg-transparent"></div>
-
-    <div className="w-full h-[1.2px] backdrop-blur-[12.82px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[13.33px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[13.85px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[14.36px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[14.87px] bg-transparent"></div>
-
-    <div className="w-full h-[1.2px] backdrop-blur-[15.38px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[15.90px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[16.41px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[16.92px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[17.44px] bg-transparent"></div>
-
-    <div className="w-full h-[1.2px] backdrop-blur-[17.95px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[18.46px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[18.97px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[19.49px] bg-transparent"></div>
-    <div className="w-full h-[1.2px] backdrop-blur-[20px] bg-transparent"></div>
-
-  </div>
-
-
-
+        {/* Your blur effects */}
+        <div className="fixed bottom-0 w-full pointer-events-none">
+          {[...Array(40)].map((_, i) => (
+            <div
+              key={i}
+              className={`w-full h-[1.2px] backdrop-blur-[${(i * 0.51).toFixed(2)}px] bg-transparent`}
+            ></div>
+          ))}
+        </div>
       </div>
 
       <div className="fixed inset-0 flex items-center justify-center text-red-900 md:hidden font-bold text-2xl z-99 ">

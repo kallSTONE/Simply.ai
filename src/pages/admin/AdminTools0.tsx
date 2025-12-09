@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 import { supabase, Tool } from '../../lib/supabase';
 import { AdminLayout } from './AdminLayout';
 import { ToolForm } from '../../components/admin/ToolForm';
@@ -8,7 +8,6 @@ export function AdminTools() {
   const [tools, setTools] = useState<Tool[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingTool, setEditingTool] = useState<Tool | null>(null);
-  const [search, setSearch] = useState('');
 
   useEffect(() => {
     loadTools();
@@ -20,20 +19,14 @@ export function AdminTools() {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (data) setTools(data);
+    if (data) {
+      setTools(data);
+    }
   }
-
-  const filteredTools = tools.filter((tool) => {
-    const term = search.toLowerCase();
-    return (
-      tool.name.toLowerCase().includes(term) ||
-      tool.slug.toLowerCase().includes(term) ||
-      tool.short_description?.toLowerCase().includes(term)
-    );
-  });
 
   async function deleteTool(id: string) {
     if (!confirm('Are you sure you want to delete this tool?')) return;
+
     await supabase.from('tools').delete().eq('id', id);
     loadTools();
   }
@@ -51,20 +44,11 @@ export function AdminTools() {
 
   return (
     <AdminLayout>
-      <div className="flex relative justify-between items-center mb-6">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={20} />
-
-        <input
-          type="text"
-          placeholder="Search tools..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 pl-12 pr-4 py-3 bg-neutral-800 border border-neutral-700 rounded-xl text-white placeholder-neutral-500 focus:outline-none focus:border-green-600"
-        />
-        
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-white">Manage Tools</h2>
         <button
           onClick={() => setShowForm(true)}
-          className="ml-4 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center gap-2 font-medium"
+          className="px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors flex items-center gap-2 font-medium"
         >
           <Plus size={20} />
           Add Tool
@@ -72,7 +56,7 @@ export function AdminTools() {
       </div>
 
       <div className="space-y-4">
-        {filteredTools.map((tool) => (
+        {tools.map((tool) => (
           <div
             key={tool.id}
             className="bg-neutral-800 border border-neutral-700 rounded-xl p-6 flex items-center justify-between"
@@ -98,7 +82,6 @@ export function AdminTools() {
                 </div>
               </div>
             </div>
-
             <div className="flex gap-2">
               <button
                 onClick={() => handleEdit(tool)}
@@ -117,7 +100,12 @@ export function AdminTools() {
         ))}
       </div>
 
-      {showForm && <ToolForm tool={editingTool} onClose={handleClose} />}
+      {showForm && (
+        <ToolForm
+          tool={editingTool}
+          onClose={handleClose}
+        />
+      )}
     </AdminLayout>
   );
 }
