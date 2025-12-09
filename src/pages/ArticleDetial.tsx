@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { supabase, Article } from '../lib/supabase';
 import { useAuth } from '../lib/auth-context';
+import DAI from '../public/images/defaultArticle.jpg'
 
 export function ArticleDetail() {
   const { slug } = useParams();
@@ -69,7 +70,14 @@ export function ArticleDetail() {
         Back to Articles
       </Link>
 
-      <div className="bg-neutral-800 border border-neutral-700 rounded-2xl p-8">
+      <div className="bg-gray-800/60 border border-neutral-700 rounded-2xl p-8">
+        <img src={DAI} alt="article" className='h-12 w-full object-cover rounded-lg mb-4' />
+
+        <audio controls className="w-full h-8 mb-4">
+          <source src="https://xwuztokssofiivvjtnsj.supabase.co/storage/v1/object/public/audioArticle/Fiery_Reveal_Business_Idea.wav" type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+
         <h1 className="text-4xl font-bold text-white mb-2">{article.title}</h1>
 
         <div className="text-neutral-400 mb-6">
@@ -88,7 +96,7 @@ export function ArticleDetail() {
             {article.tags.map((tag) => (
               <span
                 key={tag}
-                className="px-4 py-2 bg-neutral-700 text-neutral-300 rounded-xl"
+                className="px-4 py-2 bg-green-800/30 text-neutral-300 border border-neutral-700/50 rounded-xl"
               >
                 {tag}
               </span>

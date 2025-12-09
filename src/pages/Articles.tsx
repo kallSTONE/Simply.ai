@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileText } from 'lucide-react';
 import { supabase, Article } from '../lib/supabase';
+import DAI from '../public/images/defaultArticle.jpg'
 
 export function Articles() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -36,14 +37,16 @@ export function Articles() {
           <p className="text-xl text-gray-400/60">No articles published yet</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="border border-gray-700/60 rounded-3xl p-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {articles.map((article) => (
             <Link
               key={article.id}
               to={`/article/${article.slug}`}
-              className="block bg-gray-800/60 border border-gray-700/60 rounded-2xl p-6 hover:border-green-600 transition-colors"
-            >
+              className="block h-64 overflow-hidden bg-gray-800/60 border border-gray-700/60 rounded-2xl p-6 hover:border-green-600 transition-colors"
+            >              
+              <img src={DAI} alt="article" className='h-12 w-full object-cover rounded-lg mb-4' />
               <h2 className="text-2xl font-bold text-white mb-2">{article.title}</h2>
+              {/* <img src={`../../${article.image}`} alt="article" className="w-full h-auto" /> */}
               <p className="text-gray-300/60 mb-4">{article.summary}</p>
               <div className="flex flex-wrap gap-2">
                 {article.tags.map((tag) => (
