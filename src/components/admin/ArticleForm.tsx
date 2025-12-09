@@ -13,6 +13,8 @@ export function ArticleForm({ article, onClose }: ArticleFormProps) {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [audioFile, setAudioFile] = useState<File | null>(null);
 
   const [formData, setFormData] = useState({
     title: article?.title || '',
@@ -49,6 +51,28 @@ export function ArticleForm({ article, onClose }: ArticleFormProps) {
       setSelectedCategories(data.map(tc => tc.category_id));
     }
   }
+
+  async function uploadFile(bucket: string, file: File, articleId: string) {
+    const ext = file.name.split('.').pop();
+    const filePath = `${articleId}.${ext}`;
+
+    const { error } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, file, { upsert: true });
+
+    if (error) {
+      console.error(error);
+      alert(error.message);
+      return null;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(filePath);
+
+    return urlData.publicUrl;
+  }
+
 
   function generateSlug(name: string) {
     return name
@@ -110,90 +134,103 @@ export function ArticleForm({ article, onClose }: ArticleFormProps) {
   //   onClose();
   // }
 
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
 
-
-async function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
-  setLoading(true);
-
-  // You MUST have a logged-in user
-  if (!user) {
-    alert("You must be logged in to create or edit an article.");
-    setLoading(false);
-    return;
-  }
-
-  // Build article payload
-  const articleData = {
-    ...formData,
-    tags: formData.tags
-      .split(',')
-      .map(t => t.trim())
-      .filter(Boolean),
-    author_id: user.id, // Always the current user
-  };
-
-  let newArticleId = article?.id;
-  let error = null;
-
-  if (article) {
-    // ----- UPDATE EXISTING ARTICLE -----
-    const { error: updateError } = await supabase
-      .from('articles')
-      .update(articleData)
-      .eq('id', article.id);
-
-    error = updateError;
-  } else {
-    // ----- CREATE NEW ARTICLE -----
-    const { data: newArticle, error: insertError } = await supabase
-      .from('articles')
-      .insert(articleData)
-      .select()
-      .single();
-
-    error = insertError;
-    newArticleId = newArticle?.id; // For inserting categories
-  }
-
-  // If insert/update failed → stop
-  if (error) {
-    console.error("Article save error:", error);
-    alert(error.message);
-    setLoading(false);
-    return;
-  }
-
-  // ----- CATEGORY RELATIONS -----
-  // Remove old categories if editing
-  if (article) {
-    await supabase
-      .from('article_categories')
-      .delete()
-      .eq('article_id', article.id);
-  }
-
-  // Add new categories
-  if (selectedCategories.length > 0 && newArticleId) {
-    const { error: categoryError } = await supabase.from('article_categories').insert(
-      selectedCategories.map(catId => ({
-        article_id: newArticleId,
-        category_id: catId,
-      }))
-    );
-
-    if (categoryError) {
-      console.error("Category insert error:", categoryError);
-      alert(categoryError.message);
+    if (!user) {
+      alert("You must be logged in to create or edit an article.");
       setLoading(false);
       return;
     }
+
+    try {
+      // 1️⃣ Build article payload WITHOUT image/audio initially
+      const articleData: any = {
+        ...formData,
+        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
+        author_id: user.id,
+      };
+
+      let newArticleId = article?.id;
+
+      // 2️⃣ Insert or update the article (without files yet)
+      if (article) {
+        // Update existing article
+        const { error: updateError } = await supabase
+          .from('articles')
+          .update(articleData)
+          .eq('id', article.id);
+        if (updateError) throw updateError;
+        newArticleId = article.id;
+      } else {
+        // Create new article
+        const { data: newArticle, error: insertError } = await supabase
+          .from('articles')
+          .insert(articleData)
+          .select()
+          .single();
+        if (insertError) throw insertError;
+        newArticleId = newArticle.id;
+      }
+
+      // 3️⃣ Handle categories
+      if (article) {
+        await supabase.from('article_categories').delete().eq('article_id', article.id);
+      }
+
+      if (selectedCategories.length > 0 && newArticleId) {
+        const { error: categoryError } = await supabase.from('article_categories').insert(
+          selectedCategories.map(catId => ({
+            article_id: newArticleId,
+            category_id: catId,
+          }))
+        );
+        if (categoryError) throw categoryError;
+      }
+
+      // 4️⃣ Upload image and audio files (if provided), otherwise use fallback URLs
+      const updates: Partial<{ image_url: string; audio_url: string }> = {};
+
+      // IMAGE
+      if (imageFile && newArticleId) {
+        const ext = imageFile.name.split('.').pop();
+        const filePath = `${newArticleId}.${ext}`;
+        await supabase.storage.from('article-images').upload(filePath, imageFile, { upsert: true });
+        const { data } = supabase.storage.from('article-images').getPublicUrl(filePath);
+        updates.image_url = data.publicUrl ?? 'https://xwuztokssofiivvjtnsj.supabase.co/storage/v1/object/public/images/defaultAvatar.jpg';
+      } else {
+        updates.image_url = 'https://xwuztokssofiivvjtnsj.supabase.co/storage/v1/object/public/images/defaultAvatar.jpg';
+      }
+
+      // AUDIO
+      if (audioFile && newArticleId) {
+        const ext = audioFile.name.split('.').pop();
+        const filePath = `${newArticleId}.${ext}`;
+        await supabase.storage.from('article-audio').upload(filePath, audioFile, { upsert: true });
+        const { data } = supabase.storage.from('article-audio').getPublicUrl(filePath);
+        updates.audio_url = data.publicUrl ?? 'https://xwuztokssofiivvjtnsj.supabase.co/storage/v1/object/public/audioArticle/Fiery_Reveal_Business_Idea.wav';
+      } else {
+        updates.audio_url = 'https://xwuztokssofiivvjtnsj.supabase.co/storage/v1/object/public/audioArticle/Fiery_Reveal_Business_Idea.wav';
+      }
+
+      // 5️⃣ Update article with URLs (files or fallback)
+      if (newArticleId) {
+        const { error: updateFilesError } = await supabase
+          .from('articles')
+          .update(updates)
+          .eq('id', newArticleId);
+        if (updateFilesError) throw updateFilesError;
+      }
+
+      setLoading(false);
+      onClose();
+    } catch (err: any) {
+      console.error('Error saving article:', err);
+      alert(err.message || 'Failed to save article');
+      setLoading(false);
+    }
   }
-
-  setLoading(false);
-  onClose();
-}
-
 
 
   return (
@@ -261,7 +298,7 @@ async function handleSubmit(e: React.FormEvent) {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-{/* 
+          {/* 
             <div>
               <label className="block text-sm font-medium text-neutral-300/85 mb-2">Author ID</label>
               <input
@@ -318,6 +355,27 @@ async function handleSubmit(e: React.FormEvent) {
               placeholder="https://example.com/screenshot1.jpg"
             />
           </div> */}
+
+          <div>
+            <label className="block text-sm font-medium text-neutral-300/85 mb-2">Header Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+              className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-neutral-300/85 mb-2">Audio File</label>
+            <input
+              type="file"
+              accept="audio/*"
+              onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)}
+              className="w-full px-4 py-3 bg-neutral-800/85 border border-neutral-700/85 rounded-xl text-white"
+            />
+          </div>
+
 
           <button
             type="submit"

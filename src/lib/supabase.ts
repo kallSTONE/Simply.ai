@@ -56,10 +56,11 @@ export type Article = {
   tags: string[];
   author_id: string | null;
   published: boolean;
+  image_url: string | null;   // <-- NEW
+  audio_url: string | null;   // <-- NEW
   created_at: string;
   updated_at: string;
 };
-
 export type Submission = {
   id: string;
   payload: any;

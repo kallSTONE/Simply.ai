@@ -44,7 +44,7 @@ export function Articles() {
               to={`/article/${article.slug}`}
               className="block h-64 overflow-hidden bg-gray-800/60 border border-gray-700/60 rounded-2xl p-6 hover:border-green-600 transition-colors"
             >              
-              <img src={DAI} alt="article" className='h-12 w-full object-cover rounded-lg mb-4' />
+              <img src={article.image_url || DAI} alt="article" className='h-12 w-full object-cover rounded-lg mb-4' />
               <h2 className="text-2xl font-bold text-white mb-2">{article.title}</h2>
               {/* <img src={`../../${article.image}`} alt="article" className="w-full h-auto" /> */}
               <p className="text-gray-300/60 mb-4">{article.summary}</p>

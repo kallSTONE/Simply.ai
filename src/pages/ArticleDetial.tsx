@@ -71,10 +71,10 @@ export function ArticleDetail() {
       </Link>
 
       <div className="bg-gray-800/60 border border-neutral-700 rounded-2xl p-8">
-        <img src={DAI} alt="article" className='h-12 w-full object-cover rounded-lg mb-4' />
+        <img src={article.image_url || DAI} alt="article" className='h-12 w-full object-cover rounded-lg mb-4' />
 
         <audio controls className="w-full h-8 mb-4">
-          <source src="https://xwuztokssofiivvjtnsj.supabase.co/storage/v1/object/public/audioArticle/Fiery_Reveal_Business_Idea.wav" type="audio/mpeg" />
+          <source src={article.audio_url || "https://xwuztokssofiivvjtnsj.supabase.co/storage/v1/object/public/audioArticle/Fiery_Reveal_Business_Idea.wav"} type="audio/mpeg" />
           Your browser does not support the audio element.
         </audio>
 
